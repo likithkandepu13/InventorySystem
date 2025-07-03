@@ -103,6 +103,7 @@ const GuestLog = () => {
   }, [filteredData]);
 
   const columns = [
+    { title: '_id', dataIndex: '_id', key: '_id' },
     { title: 'Room', dataIndex: 'roomNumber', key: 'roomNumber', sorter: (a, b) => a.roomNumber - b.roomNumber },
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Phone', dataIndex: 'phone', key: 'phone' },
@@ -115,16 +116,17 @@ const GuestLog = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Popconfirm
-          title="Delete this entry?"
-          onConfirm={() => handleDelete(record.roomNumber, record._id)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button icon={<DeleteOutlined />} danger size="small" />
-        </Popconfirm>
-      ),
+      render: (_, record) =>
+        record._id ? (
+          <Popconfirm
+            title="Delete this entry?"
+            onConfirm={() => handleDelete(record.roomNumber, record._id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button icon={<DeleteOutlined />} danger size="small" />
+          </Popconfirm>
+        ) : null,
     },
   ];
 
@@ -202,12 +204,9 @@ const GuestLog = () => {
       <div style={{ width: '100%', overflowX: 'auto' }}>
         <Table
           columns={columns}
-          dataSource={filteredData.map((row) => ({ ...row, key: row._id || `${row.roomNumber}-${row.checkIn}` }))}
-          pagination={{ pageSize: 8 }}
-          bordered
-          scroll={{ x: true }}
-          style={{ minWidth: 900 }}
+          dataSource={filteredData}
           loading={loading}
+          rowKey={record => record._id || `${record.roomNumber}-${record.checkIn}`}
         />
       </div>
     </div>

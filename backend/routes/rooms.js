@@ -10,6 +10,7 @@ router.get('/all-guests', async (req, res) => {
     const guests = rooms.flatMap(room =>
       [
         ...(room.history || []).map(h => ({
+          _id: h._id ? h._id.toString() : undefined,
           roomNumber: room.number,
           name: h.name,
           phone: h.phone,
@@ -33,6 +34,7 @@ router.get('/all-guests', async (req, res) => {
         }] : [])
       ]
     );
+    console.log('All guests response:', guests);
     res.json(guests);
   } catch (err) {
     res.status(500).json({ error: err.message });
